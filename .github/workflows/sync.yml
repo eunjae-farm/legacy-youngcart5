@@ -21,7 +21,11 @@ jobs:
       - name: Run Bootstrap Script
         shell: bash
         run: |
+         ls
+         pwd
+         echo "11"
          sudo apt install -y git sshpass openssh-server
+         echo "22"
          rm -rf *
          sshpass sshpass -p "${{ secrets.FTP_PASSWORD }}" scp -r ${{ secrets.FTP_USERID }}@${{ secrets.FTP_HOST }}:${{ secrets.FTP_PATH }} ..
          cp -r ../www/* ./
