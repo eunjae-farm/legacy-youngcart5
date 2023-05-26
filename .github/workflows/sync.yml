@@ -1,0 +1,47 @@
+name: Docker Image CI
+
+on:
+  schedule:
+     - cron: '0 0 * * *'
+  push:
+    tags:
+      - 'v*'
+
+jobs:
+  ci:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Set a variable
+        run: echo "::set-output name=myTime::$(date +'%Y-%m-%d %H:%M:%S')"
+        id: myStep
+        
+      - uses: actions/checkout@v2
+        name: Checkout
+      
+      - name: Run Bootstrap Script
+        shell: bash
+        run: |
+         sudo apt install -y git sshpass scp
+         rm -rf *
+         sshpass sshpass -p "${{ secrets.FTP_PASSWORD }}" scp -r ${{ secrets.FTP_USERID }}@${{ secrets.FTP_HOST }}:${{ secrets.FTP_PATH }} ..
+         cp -r ../www/* ./
+         
+    # 커밋
+      - name: Add & Commit
+        uses: EndBug/add-and-commit@v4.4.0
+        with:
+          add: '.'
+          ref: "main"
+          author_name: 'Piorosen-Bot'
+          author_email: 'ckwngud1@gmail.com'
+          message: "[BOT] update submodule [ ${{ steps.myStep.outputs.myTime }} ]"
+        env:
+          GITHUB_TOKEN: ${{ secrets.BOT_TOKEN }}
+        
+    # 푸시
+      - name: Push commit
+        uses: ad-m/github-push-action@master
+        with:
+          github_token: ${{ secrets.BOT_TOKEN }}
+          repository: eunjae-farm/yongcart5
+          branch: main
