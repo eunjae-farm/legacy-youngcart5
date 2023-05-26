@@ -239,7 +239,11 @@ $check_sanitize_keys = array(
 );
 
 foreach( $check_sanitize_keys as $key ){
-    $$key = isset($_POST[$key]) ? clean_xss_tags($_POST[$key], 1, 1) : '';
+    if( in_array($key, array('de_bank_account')) ){
+        $$key = isset($_POST[$key]) ? clean_xss_tags($_POST[$key], 1, 1, 0, 0) : '';
+    } else {
+        $$key = isset($_POST[$key]) ? clean_xss_tags($_POST[$key], 1, 1) : '';
+    }
 }
 
 $warning_msg = '';
@@ -427,17 +431,19 @@ $sql = " update {$g5['g5_shop_default_table']}
                 de_kakaopay_enckey            = '{$de_kakaopay_enckey}',
                 de_kakaopay_hashkey           = '{$de_kakaopay_hashkey}',
                 de_kakaopay_cancelpwd         = '{$de_kakaopay_cancelpwd}',
-                de_naverpay_mid               = '{$de_naverpay_mid}',
-                de_naverpay_cert_key          = '{$de_naverpay_cert_key}',
-                de_naverpay_button_key        = '{$de_naverpay_button_key}',
-                de_naverpay_test              = '{$de_naverpay_test}',
-                de_naverpay_mb_id             = '{$de_naverpay_mb_id}',
-                de_naverpay_sendcost          = '{$de_naverpay_sendcost}',
                 de_member_reg_coupon_use      = '{$de_member_reg_coupon_use}',
                 de_member_reg_coupon_term     = '{$de_member_reg_coupon_term}',
                 de_member_reg_coupon_price    = '{$de_member_reg_coupon_price}',
                 de_member_reg_coupon_minimum  = '{$de_member_reg_coupon_minimum}'
                 ";
+if (defined('G5_SHOP_DIRECT_NAVERPAY') && G5_SHOP_DIRECT_NAVERPAY) {
+    $sql .= "  ,de_naverpay_mid               = '{$de_naverpay_mid}',
+                de_naverpay_cert_key          = '{$de_naverpay_cert_key}',
+                de_naverpay_button_key        = '{$de_naverpay_button_key}',
+                de_naverpay_test              = '{$de_naverpay_test}',
+                de_naverpay_mb_id             = '{$de_naverpay_mb_id}',
+                de_naverpay_sendcost          = '{$de_naverpay_sendcost}' ";
+}
 sql_query($sql);
 
 // 환경설정 > 포인트 사용
@@ -455,6 +461,8 @@ $sql = " update {$g5['config_table']}
                 cf_lg_mid               = '{$cf_lg_mid}',
                 cf_lg_mert_key          = '{$cf_lg_mert_key}' ";
 sql_query($sql);
+
+run_event('shop_admin_configformupdate');
 
 if( $warning_msg ){
     alert($warning_msg, "./configform.php");

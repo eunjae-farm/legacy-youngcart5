@@ -9,10 +9,11 @@ if( !function_exists('che_reprocessImage') ){
     function che_reprocessImage($file_path, $callback){
 
         $MIME_TYPES_PROCESSORS = array(
-            "image/gif"       => array("imagecreatefromgif", "imagegif"),
+            "image/gif"       => array("imagecreatefromgif",  "imagegif"),
             "image/jpg"       => array("imagecreatefromjpeg", "imagejpeg"),
             "image/jpeg"      => array("imagecreatefromjpeg", "imagejpeg"),
-            "image/png"       => array("imagecreatefrompng", "imagepng"),
+            "image/png"       => array("imagecreatefrompng",  "imagepng"),
+            "image/webp"      => array("imagecreatefromwebp", "imagewebp"),
             "image/bmp"       => array("imagecreatefromwbmp", "imagewbmp")
         );
 
@@ -76,7 +77,7 @@ run_event('cheditor_photo_upload', $data_dir, $data_url);
 //
 $tempfile = $_FILES['file']['tmp_name'];
 $filename = $_FILES['file']['name'];
-
+$filename_len = strrpos($filename, ".");
 $type = substr($filename, strrpos($filename, ".")+1);
 $found = false;
 switch ($type) {
@@ -84,16 +85,17 @@ switch ($type) {
 	case "jpeg":
 	case "gif":
 	case "png":
+    case "webp":
 		$found = true;
 }
 
-if ($found != true) {
+if ($found != true || $filename_len != 23) {
 	exit;
 }
 
-// ÀúÀå ÆÄÀÏ ÀÌ¸§: ³â¿ùÀÏ½ÃºĞÃÊ_·»´ı¹®ÀÚ8ÀÚ
+// ì €ì¥ íŒŒì¼ ì´ë¦„: ë…„ì›”ì¼ì‹œë¶„ì´ˆ_ë Œë¤ë¬¸ì8ì
 // 20140327125959_abcdefghi.jpg
-// ¿øº» ÆÄÀÏ ÀÌ¸§: $_POST["origname"]
+// ì›ë³¸ íŒŒì¼ ì´ë¦„: $_POST["origname"]
 
 $filename = che_replace_filename($filename);
 $savefile = SAVE_DIR . '/' . $filename;

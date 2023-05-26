@@ -7,7 +7,7 @@ add_javascript('<script src="'.G5_JS_URL.'/jquery.bxslider.js"></script>', 10);
 ?>
 
 <?php if($config['cf_kakao_js_apikey']) { ?>
-<script src="https://developers.kakao.com/sdk/js/kakao.min.js"></script>
+<script src="https://developers.kakao.com/sdk/js/kakao.min.js" async></script>
 <script src="<?php echo G5_JS_URL; ?>/kakaolink.js"></script>
 <script>
     // 사용할 앱의 Javascript 키를 설정해 주세요.
@@ -77,7 +77,6 @@ add_javascript('<script src="'.G5_JS_URL.'/jquery.bxslider.js"></script>', 10);
                     <div class="sns_area">
                         <?php echo get_sns_share_link('facebook', $sns_url, $sns_title, G5_MSHOP_SKIN_URL.'/img/facebook.png'); ?>
                         <?php echo get_sns_share_link('twitter', $sns_url, $sns_title, G5_MSHOP_SKIN_URL.'/img/twitter.png'); ?>
-                        <?php echo get_sns_share_link('googleplus', $sns_url, $sns_title, G5_MSHOP_SKIN_URL.'/img/gplus.png'); ?>
                         <?php echo get_sns_share_link('kakaotalk', $sns_url, $sns_title, G5_MSHOP_SKIN_URL.'/img/sns_kakao.png'); ?>
                         <?php
                         $href = G5_SHOP_URL.'/iteminfo.php?it_id='.$it_id;
@@ -346,10 +345,10 @@ $(function (){
 
 <div id="sit_tab">
     <ul class="tab_tit">
-        <li><button type="button" rel="#sit_inf" class="selected">상품정보</button></li>
-        <li><button type="button" rel="#sit_use">사용후기</button></li>
-        <li><button type="button" rel="#sit_qa">상품문의</button></li>
-        <li><button type="button" rel="#sit_dvex">배송/교환</button></li>
+        <li><button type="button" id="btn_sit_inf" rel="#sit_inf" class="selected">상품정보</button></li>
+        <li><button type="button" id="btn_sit_use" rel="#sit_use">사용후기</button></li>
+        <li><button type="button" id="btn_sit_qa" rel="#sit_qa">상품문의</button></li>
+        <li><button type="button" id="btn_sit_dvex" rel="#sit_dvex">배송/교환</button></li>
     </ul>
     <ul class="tab_con">
 
@@ -516,6 +515,11 @@ $(function(){
 
         return false;
     });
+
+    if (window.location.href.split("#").length > 1) {
+        let id = window.location.href.split("#")[1];
+        $("#btn_" + id).trigger("click");
+    };
 });
 
 // 상품보관

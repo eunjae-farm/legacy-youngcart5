@@ -116,7 +116,7 @@ border:1px solid #558ab7 !important;
 #side_menu {height:100%;position:fixed;top:0;right:0;background:#fff;border-left:1px solid #e5e7ea;z-index:120;padding-left:50px;-webkit-box-shadow:0 1px 5px #d6d6d6;
 -moz-box-shadow:0 1px 5px #d6d6d6;
 box-shadow:0 1px 5px #d6d6d6}
-s
+
 #quick {position:absolute;top:50%;left:0;width:50px;margin-top:-157.5px}
 #quick li {position:relative}
 #quick li button {width:50px;height:50px;border:0;font-size:1.325em;background:#fff;color:#495057}
@@ -504,7 +504,7 @@ box-shadow:0 1px 10px rgba(0,0,0,.1)}
 .new_win .new_win_con2 {margin:20px 0 0}
 .new_win .btn_confirm:after {display:block;visibility:hidden;clear:both;content:""}
 .new_win .win_btn {text-align:center;padding-bottom:30px}
-.new_win .btn_close {height:45px;width:60px;overflow:hidden;cursor:pointer}
+.new_win .btn_close {padding:0 20px;height:45px;overflow:hidden;cursor:pointer}
 .new_win .btn_submit {padding:0 20px;height:45px;font-weight:bold;font-size:1.083em}
 
 
@@ -752,7 +752,7 @@ box-shadow: 1px 2px 2px #eee;}
 #sod_frm_taker .tbl_frm01 .choice_place input[type="radio"] + label span {top:7px}
 #sod_frm_taker .tbl_frm01 .choice_place input,
 #sod_frm_taker .tbl_frm01 .choice_place label {margin-left:10px}
-#sod_frm_taker .tbl_frm01 .btn_frmline {width:80px;height:30px;line-height:28px;background:#fff;border:1px solid #d4d6db;color:#606060;text-align:center;float:right}
+#sod_frm_taker .tbl_frm01 .btn_frmline {padding:0;width:80px;height:30px;line-height:28px;background:#fff;border:1px solid #d4d6db;color:#606060;text-align:center;float:right}
 
 #sod_frm_taker .tbl_frm01 td input {width:100%}
 #sod_frm_taker .tbl_frm01 td .addr input {width:20%}
@@ -1148,6 +1148,7 @@ box-shadow: 1px 2px 2px #eee;}
 .sod_frm_mobile #m_sod_frm_paysel .inicis_lpay{background:url(../img/lpay_logo.png) no-repeat;width:35px;height:12px;overflow:hidden;text-indent:-999px;display:inline-block;background-size:100%}
 .sod_frm_mobile #m_sod_frm_paysel .inicis_kakaopay{background:url(../img/kakao.png) no-repeat 50% 50% #f4dc34;border-radius:30px;height:22px;width:74px;display:inline-block;overflow:hidden;text-indent:-999px;background-size:35px auto}
 .sod_frm_mobile #m_sod_frm_paysel .kakaopay_icon{background:url(../img/kakao.png) no-repeat 50% 50% #f4dc34;border-radius:30px;height:22px;width:74px;display:inline-block;overflow:hidden;text-indent:-999px;background-size:35px auto}
+.sod_frm_mobile #m_sod_frm_paysel .applepay_icon{background:url(../img/ico-mobile-applepay.png) no-repeat 50% 50% #fff;border-radius:30px;height:23px;width:50px;display:inline-block;overflow:hidden;text-indent:-999px;background-size:35px auto}
 .sod_frm_mobile #m_sod_frm_paysel .samsung_pay{margin-left:-23px;background:url(../img/samsungpay.png) no-repeat 24px 3px;height:25px;width:106px;display:inline-block;overflow:hidden;text-indent:-999px}
 .sod_frm_mobile #sod_frm_pay{border-top:1px solid #f3f3f3}
 .sod_frm_mobile #sod_frm_pay h2{margin:10px 0;font-size:1.25em}
@@ -1260,6 +1261,7 @@ html.no-overflowscrolling #sc_coupon_frm, html.no-overflowscrolling #od_coupon_f
 /* input, radio */
 .selec_chk {position:absolute;top:0;left:0;width:0;height:0;opacity:0;outline:0;z-index:-1;overflow:hidden}
 .chk_box {position:relative}
+.chk_box input[type="checkbox"] {position:absolute;top:0;left:0;width:0;height:0;opacity:0;outline:0;z-index:-1;overflow:hidden}
 .chk_box input[type="checkbox"] + label {position:relative;padding-left:20px;color:#676e70}
 .chk_box input[type="checkbox"] + label:hover{color:#2172f8}
 .chk_box input[type="checkbox"] + label span {position:absolute;top:2px;left:0;width:15px;height:15px;display:block;margin:0;background:#fff;border:1px solid #d0d4df;border-radius:3px}

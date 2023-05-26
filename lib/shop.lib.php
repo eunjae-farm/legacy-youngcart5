@@ -1521,9 +1521,6 @@ function get_sns_share_link($sns, $url, $title, $img)
         case 'twitter':
             $str = '<a href="https://twitter.com/share?url='.urlencode($url).'&amp;text='.urlencode($title).'" class="share-twitter" target="_blank"><img src="'.$img.'" alt="트위터에 공유"></a>';
             break;
-        case 'googleplus':
-            $str = '<a href="https://plus.google.com/share?url='.urlencode($url).'" class="share-googleplus" target="_blank"><img src="'.$img.'" alt="구글플러스에 공유"></a>';
-            break;
         case 'kakaotalk':
             if($config['cf_kakao_js_apikey'])
                 $str = '<a href="javascript:kakaolink_send(\''.str_replace('+', ' ', urlencode($title)).'\', \''.urlencode($url).'\');" class="share-kakaotalk"><img src="'.$img.'" alt="카카오톡 링크보내기"></a>';
@@ -2035,6 +2032,10 @@ function shop_member_cert_check($id, $type)
                 $sql = " select ca_cert_use, ca_adult_use from {$g5['g5_shop_category_table']} where ca_id = '$ca_id' ";
                 $row = sql_fetch($sql);
 
+                if (($row['ca_cert_use'] || $row['ca_adult_use']) && strlen($member['mb_dupinfo']) == 64 && $member['mb_certify']) { // 본인 인증 된 계정 중에서 di로 저장 되었을 경우에만
+                    goto_url(G5_BBS_URL."/member_cert_refresh.php?url=".urlencode(get_pretty_url($bo_table, $wr_id, $qstr)));
+                }
+
                 // 본인확인체크
                 if($row['ca_cert_use'] && !$member['mb_certify']) {
                     if($member['mb_id'])
@@ -2064,6 +2065,11 @@ function shop_member_cert_check($id, $type)
         case 'list':
             $sql = " select * from {$g5['g5_shop_category_table']} where ca_id = '$id' ";
             $ca = sql_fetch($sql);
+
+            if (($ca['ca_cert_use'] || $ca['ca_adult_use']) && strlen($member['mb_dupinfo']) == 64 && $member['mb_certify']) { // 본인 인증 된 계정 중에서 di로 저장 되었을 경우에만
+                goto_url(G5_BBS_URL."/member_cert_refresh.php?url=".urlencode(get_pretty_url($bo_table, $wr_id, $qstr)));
+            
+            }
 
             // 본인확인체크
             if($ca['ca_cert_use'] && !$member['mb_certify']) {
@@ -2455,9 +2461,9 @@ function shop_is_taxsave($od, $is_view_receipt=false){
 	if( $od['od_settle_case'] == '무통장' ){
 		$od_pay_type = 'account';
 	} else if ( $od['od_settle_case'] == '계좌이체' ) {
-		$od_pay_type = 'vbank';
-	} else if ( $od['od_settle_case'] == '가상계좌' ) {
 		$od_pay_type = 'transfer';
+	} else if ( $od['od_settle_case'] == '가상계좌' ) {
+		$od_pay_type = 'vbank';
 	}
 	
 	if( $od_pay_type ) {
@@ -2619,10 +2625,10 @@ function make_order_field($data, $exclude)
 
         if(is_array($value)) {
             foreach($value as $k=>$v) {
-                $field .= '<input type="hidden" name="'.$key.'['.$k.']" value="'.$v.'">'.PHP_EOL;
+                $field .= '<input type="hidden" name="'.$key.'['.$k.']" value="'.get_text($v).'">'.PHP_EOL;
             }
         } else {
-            $field .= '<input type="hidden" name="'.$key.'" value="'.$value.'">'.PHP_EOL;
+            $field .= '<input type="hidden" name="'.$key.'" value="'.get_text($value).'">'.PHP_EOL;
         }
     }
 
@@ -2763,6 +2769,8 @@ function check_pay_name_replace($payname, $od=array(), $is_client=0){
                 return '네이버페이_NHNKCP'.$add_str;
             } else if( isset($od['od_other_pay_type']) && ($od['od_other_pay_type'] === 'OT13' || $od['od_other_pay_type'] === 'NHNKCP_KAKAOMONEY') ){
                 return '카카오페이_NHNKCP'.$add_str;
+            } else if( isset($od['od_other_pay_type']) && $od['od_other_pay_type'] === 'OT21' ){
+                return '애플페이_NHNKCP'.$add_str;
             }
 
             return 'PAYCO'.$add_str;

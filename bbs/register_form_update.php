@@ -31,11 +31,11 @@ else
 if(!$mb_id)
     alert('회원아이디 값이 없습니다. 올바른 방법으로 이용해 주십시오.');
 
-$mb_password    = isset($_POST['mb_password']) ? trim($_POST['mb_password']) : '';
-$mb_password_re = isset($_POST['mb_password_re']) ? trim($_POST['mb_password_re']) : '';
-$mb_name        = isset($_POST['mb_name']) ? trim($_POST['mb_name']) : '';
-$mb_nick        = isset($_POST['mb_nick']) ? trim($_POST['mb_nick']) : '';
-$mb_email       = isset($_POST['mb_email']) ? trim($_POST['mb_email']) : '';
+$mb_password    = isset($_POST['mb_password'])      ? trim($_POST['mb_password']) : '';
+$mb_password_re = isset($_POST['mb_password_re'])   ? trim($_POST['mb_password_re']) : '';
+$mb_name        = isset($_POST['mb_name'])          ? trim($_POST['mb_name']) : '';
+$mb_nick        = isset($_POST['mb_nick'])          ? trim($_POST['mb_nick']) : '';
+$mb_email       = isset($_POST['mb_email'])         ? trim($_POST['mb_email']) : '';
 $mb_sex         = isset($_POST['mb_sex'])           ? trim($_POST['mb_sex'])         : "";
 $mb_birth       = isset($_POST['mb_birth'])         ? trim($_POST['mb_birth'])       : "";
 $mb_homepage    = isset($_POST['mb_homepage'])      ? trim($_POST['mb_homepage'])    : "";
@@ -62,6 +62,7 @@ $mb_7           = isset($_POST['mb_7'])             ? trim($_POST['mb_7'])      
 $mb_8           = isset($_POST['mb_8'])             ? trim($_POST['mb_8'])           : "";
 $mb_9           = isset($_POST['mb_9'])             ? trim($_POST['mb_9'])           : "";
 $mb_10          = isset($_POST['mb_10'])            ? trim($_POST['mb_10'])          : "";
+$user_type      = isset($_POST['user_type'])        ? trim($_POST['user_type'])      : "";
 
 $mb_name        = clean_xss_tags($mb_name);
 $mb_email       = get_email_address($mb_email);
@@ -98,7 +99,7 @@ if ($w == '' || $w == 'u') {
     if($w == '' && $mb_password != $mb_password_re)
         alert('비밀번호가 일치하지 않습니다.');
 
-    if ($msg = empty_mb_name($mb_name))       alert($msg, "", true, true);
+    if ($msg = empty_mb_name($mb_name))     alert($msg, "", true, true);
     if ($msg = empty_mb_nick($mb_nick))     alert($msg, "", true, true);
     if ($msg = empty_mb_email($mb_email))   alert($msg, "", true, true);
     if ($msg = reserve_mb_id($mb_id))       alert($msg, "", true, true);
@@ -240,7 +241,8 @@ if ($w == '') {
                      mb_7 = '{$mb_7}',
                      mb_8 = '{$mb_8}',
                      mb_9 = '{$mb_9}',
-                     mb_10 = '{$mb_10}'
+                     mb_10 = '{$mb_10}',
+                     user_type = '{$user_type}'
                      {$sql_certify} ";
 
     // 이메일 인증을 사용하지 않는다면 이메일 인증시간을 바로 넣는다
@@ -353,7 +355,8 @@ if ($w == '') {
                     mb_7 = '{$mb_7}',
                     mb_8 = '{$mb_8}',
                     mb_9 = '{$mb_9}',
-                    mb_10 = '{$mb_10}'
+                    mb_10 = '{$mb_10}',
+                    user_type = '{$user_type}'
                     {$sql_password}
                     {$sql_nick_date}
                     {$sql_open_date}

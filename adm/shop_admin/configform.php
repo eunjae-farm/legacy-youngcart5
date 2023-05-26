@@ -593,7 +593,7 @@ if(!$default['de_kakaopay_cancelpwd']){
         <tr>
             <th scope="row"><label for="de_bank_account">은행계좌번호</label></th>
             <td>
-                <textarea name="de_bank_account" id="de_bank_account"><?php echo $default['de_bank_account']; ?></textarea>
+                <textarea name="de_bank_account" id="de_bank_account"><?php echo html_purifier($default['de_bank_account']); ?></textarea>
             </td>
         </tr>
         <tr>
@@ -625,7 +625,7 @@ if(!$default['de_kakaopay_cancelpwd']){
         <tr id="inicis_vbank_url" class="pg_vbank_url">
             <th scope="row">KG이니시스 가상계좌 입금통보 URL</th>
             <td>
-                <?php echo help("KG이니시스 가상계좌 사용시 다음 주소를 <strong><a href=\"https://iniweb.inicis.com/\" target=\"_blank\">KG이니시스 관리자</a> &gt; 거래조회 &gt; 가상계좌 &gt; 입금통보방식선택 &gt; URL 수신 설정</strong>에 넣으셔야 상점에 자동으로 입금 통보됩니다."); ?>
+                <?php echo help("KG이니시스 가상계좌 사용시 다음 주소를 <strong><a href=\"https://iniweb.inicis.com/\" target=\"_blank\">KG이니시스 관리자</a> &gt; 거래내역 &gt; 가상계좌 &gt; 입금통보방식선택 &gt; URL 수신 설정</strong>에 넣으셔야 상점에 자동으로 입금 통보됩니다."); ?>
                 <?php echo G5_SHOP_URL; ?>/settle_inicis_common.php</td>
         </tr>
         <tr>
@@ -781,10 +781,11 @@ if(!$default['de_kakaopay_cancelpwd']){
         <tr class="pg_info_fld kcp_info_fld">
             <th scope="row"><label for="de_kcp_easy_pays">NHN KCP 간편결제</label></th>
             <td>
-                <?php echo help("체크시 NHN KCP 간편결제들을 활성화 합니다.\nNHN_KCP > 네이버페이, 카카오페이는 테스트결제가 되지 않습니다."); ?>
+                <?php echo help("체크시 NHN KCP 간편결제들을 활성화 합니다.\nNHN_KCP > 네이버페이, 카카오페이는 테스트결제가 되지 않습니다.\n애플페이는 IOS 기기에 모바일결제만 가능합니다."); ?>
                 <input type="checkbox" id="de_easy_nhnkcp_payco" name="de_easy_pays[]" value="nhnkcp_payco" <?php if(stripos($default['de_easy_pay_services'], 'nhnkcp_payco') !== false){ echo 'checked="checked"'; } ?> > <label for="de_easy_nhnkcp_payco" disabled>PAYCO (페이코)</label><br>
                 <input type="checkbox" id="de_easy_nhnkcp_naverpay" name="de_easy_pays[]" value="nhnkcp_naverpay" <?php if(stripos($default['de_easy_pay_services'], 'nhnkcp_naverpay') !== false){ echo 'checked="checked"'; } ?> > <label for="de_easy_nhnkcp_naverpay">NAVERPAY (네이버페이)</label><br>
-                <input type="checkbox" id="de_easy_nhnkcp_kakaopay" name="de_easy_pays[]" value="nhnkcp_kakaopay" <?php if(stripos($default['de_easy_pay_services'], 'nhnkcp_kakaopay') !== false){ echo 'checked="checked"'; } ?> > <label for="de_easy_nhnkcp_kakaopay">KAKAOPAY (카카오페이)</label>
+                <input type="checkbox" id="de_easy_nhnkcp_kakaopay" name="de_easy_pays[]" value="nhnkcp_kakaopay" <?php if(stripos($default['de_easy_pay_services'], 'nhnkcp_kakaopay') !== false){ echo 'checked="checked"'; } ?> > <label for="de_easy_nhnkcp_kakaopay">KAKAOPAY (카카오페이)</label><br>
+                <input type="checkbox" id="de_easy_nhnkcp_applepay" name="de_easy_pays[]" value="nhnkcp_applepay" <?php if(stripos($default['de_easy_pay_services'], 'nhnkcp_applepay') !== false){ echo 'checked="checked"'; } ?> > <label for="de_easy_nhnkcp_applepay">APPLEPAY (애플페이)</label>
             </td>
         </tr>
         <tr class="pg_info_fld kcp_info_fld">
@@ -919,6 +920,7 @@ if(!$default['de_kakaopay_cancelpwd']){
                 <input type="text" name="de_kakaopay_hashkey" value="<?php echo get_sanitize_input($default['de_kakaopay_hashkey']); ?>" id="de_kakaopay_hashkey" class="frm_input" size="20">
             </td>
         </tr>
+        <?php if (defined('G5_SHOP_DIRECT_NAVERPAY') && G5_SHOP_DIRECT_NAVERPAY) { ?>
         <tr class="naver_info_fld">
             <th scope="row">
                 <label for="de_naverpay_mid">네이버페이 가맹점 아이디</label>
@@ -982,6 +984,7 @@ if(!$default['de_kakaopay_cancelpwd']){
                 <input type="text" name="de_naverpay_sendcost" value="<?php echo get_sanitize_input($default['de_naverpay_sendcost']); ?>" id="de_naverpay_sendcost" class="frm_input" size="70">
              </td>
         </tr>
+        <?php } // defined('G5_SHOP_DIRECT_NAVERPAY') ?>
         <tr>
             <th scope="row">에스크로 사용</th>
             <td>
@@ -1397,13 +1400,6 @@ if(!$default['de_kakaopay_cancelpwd']){
             </td>
         </tr>
         <tr>
-            <th scope="row"><label for="de_code_dup_use">코드 중복검사</label></th>
-            <td>
-                 <?php echo help("분류, 상품 등을 추가할 때 자동으로 코드 중복검사를 하려면 체크하십시오."); ?>
-                <input type="checkbox" name="de_code_dup_use" value="1" id="de_code_dup_use"<?php echo $default['de_code_dup_use']?' checked':''; ?>> 사용
-            </td>
-        </tr>
-        <tr>
             <th scope="row"><label for="de_cart_keep_term">장바구니 보관기간</label></th>
             <td>
                  <?php echo help("장바구니 상품의 보관 기간을 설정하십시오."); ?>
@@ -1602,7 +1598,7 @@ function byte_check(el_cont, el_byte)
                 <input type="password" name="cf_icode_pw" value="<?php echo get_sanitize_input($config['cf_icode_pw']); ?>" class="frm_input" id="cf_icode_pw">
             </td>
         </tr>
-        <tr class="icode_old_version" <?php if(!(isset($userinfo['payment']) && $userinfo['payment'])){ echo 'cf_tr_hide'; } ?>">
+        <tr class="icode_old_version <?php if(!(isset($userinfo['payment']) && $userinfo['payment'])){ echo 'cf_tr_hide'; } ?>">
             <th scope="row">요금제<br>(구버전)</th>
             <td>
                 <input type="hidden" name="cf_icode_server_ip" value="<?php echo get_sanitize_input($config['cf_icode_server_ip']); ?>">

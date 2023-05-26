@@ -2,7 +2,6 @@
 include_once('../common.php');
 
 if (isset($_REQUEST['sort']) && !preg_match("/(--|#|\/\*|\*\/)/", $_REQUEST['sort']))  {
-    //trim함수 : 문자열 앞뒤 공백제거
     $sort = trim($_REQUEST['sort']);
     $sort = preg_replace("/[\<\>\'\"\\\'\\\"\%\=\(\)\s]/", "", $sort);
 } else {
@@ -19,3 +18,5 @@ if (!defined('G5_USE_SHOP') || !G5_USE_SHOP)
     die('<p>쇼핑몰 설치 후 이용해 주십시오.</p>');
 
 define('_SHOP_', true);
+define('_SHOP_COMMON_', true); // 모바일 페이지의 직접 접근을 막는 경우에 사용
+?>

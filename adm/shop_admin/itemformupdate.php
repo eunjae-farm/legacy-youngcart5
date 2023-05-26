@@ -218,6 +218,10 @@ if ($w == "" || $w == "u")
     @set_cookie("ck_origin", stripslashes($it_origin), time() + 86400*31);
 }
 
+// 관련상품을 삭제한 뒤에 경고가 노출되어 등록, 수정 없이 관련상품만 삭제될 수 있는 오류 수정 (squared2님,210617)
+// 포인트 비율 값 체크
+if(($it_point_type == 1 || $it_point_type == 2) && ($it_point < 0  || $it_point > 99))
+    alert("포인트 비율을 0과 99 사이의 값으로 입력해 주십시오.");
 
 // 관련상품을 우선 삭제함
 sql_query(" delete from {$g5['g5_shop_item_relation_table']} where it_id = '$it_id' ");
@@ -286,10 +290,6 @@ for($i=0; $i<$count_ii_article; $i++) {
     $value_array[$key] = $val;
 }
 $it_info_value = addslashes(serialize($value_array));
-
-// 포인트 비율 값 체크
-if(($it_point_type == 1 || $it_point_type == 2) && $it_point > 99)
-    alert("포인트 비율을 0과 99 사이의 값으로 입력해 주십시오.");
 
 $it_name = isset($_POST['it_name']) ? strip_tags(clean_xss_attributes(trim($_POST['it_name']))) : '';
 
@@ -476,13 +476,13 @@ if ($w == "" || $w == "u")
         {
             $sql = " insert into {$g5['g5_shop_item_relation_table']}
                         set it_id  = '$it_id',
-                            it_id2 = '$it_id2[$i]',
+                            it_id2 = '".sql_real_escape_string($it_id2[$i])."',
                             ir_no = '$i' ";
             sql_query($sql, false);
 
             // 관련상품의 반대로도 등록
             $sql = " insert into {$g5['g5_shop_item_relation_table']}
-                        set it_id  = '$it_id2[$i]',
+                        set it_id  = '".sql_real_escape_string($it_id2[$i])."',
                             it_id2 = '$it_id',
                             ir_no = '$i' ";
             sql_query($sql, false);
@@ -496,7 +496,7 @@ if ($w == "" || $w == "u")
         if (trim($ev_id[$i]))
         {
             $sql = " insert into {$g5['g5_shop_event_item_table']}
-                        set ev_id = '$ev_id[$i]',
+                        set ev_id = '".sql_real_escape_string($ev_id[$i])."',
                             it_id = '$it_id' ";
             sql_query($sql, false);
         }
@@ -510,7 +510,7 @@ if($option_count) {
                     ( `io_id`, `io_type`, `it_id`, `io_price`, `io_stock_qty`, `io_noti_qty`, `io_use` )
                 VALUES ";
     for($i=0; $i<$option_count; $i++) {
-        $sql .= $comma . " ( '{$_POST['opt_id'][$i]}', '0', '$it_id', '{$_POST['opt_price'][$i]}', '{$_POST['opt_stock_qty'][$i]}', '{$_POST['opt_noti_qty'][$i]}', '{$_POST['opt_use'][$i]}' )";
+        $sql .= $comma . " ( '".sql_real_escape_string($_POST['opt_id'][$i])."', '0', '$it_id', '".sql_real_escape_string($_POST['opt_price'][$i])."', '".sql_real_escape_string($_POST['opt_stock_qty'][$i])."', '".sql_real_escape_string($_POST['opt_noti_qty'][$i])."', '".sql_real_escape_string($_POST['opt_use'][$i])."' )";
         $comma = ' , ';
     }
 
@@ -524,7 +524,7 @@ if($supply_count) {
                     ( `io_id`, `io_type`, `it_id`, `io_price`, `io_stock_qty`, `io_noti_qty`, `io_use` )
                 VALUES ";
     for($i=0; $i<$supply_count; $i++) {
-        $sql .= $comma . " ( '{$_POST['spl_id'][$i]}', '1', '$it_id', '{$_POST['spl_price'][$i]}', '{$_POST['spl_stock_qty'][$i]}', '{$_POST['spl_noti_qty'][$i]}', '{$_POST['spl_use'][$i]}' )";
+        $sql .= $comma . " ( '".sql_real_escape_string($_POST['spl_id'][$i])."', '1', '$it_id', '".sql_real_escape_string($_POST['spl_price'][$i])."', '".sql_real_escape_string($_POST['spl_stock_qty'][$i])."', '".sql_real_escape_string($_POST['spl_noti_qty'][$i])."', '".sql_real_escape_string($_POST['spl_use'][$i])."' )";
         $comma = ' , ';
     }
 

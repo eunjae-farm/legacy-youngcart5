@@ -9,19 +9,21 @@ header('Pragma: no-cache'); // HTTP/1.0
 @header('Content-Type: text/html; charset=utf-8');
 @header('X-Robots-Tag: noindex');
 
-include_once ('../config.php');
-include_once ('../lib/common.lib.php');
+$g5_path['path'] = '..';
+include_once('../config.php');
+include_once('../lib/common.lib.php');
 include_once('./install.function.php');    // 인스톨 과정 함수 모음
 
 include_once('../lib/hook.lib.php');    // hook 함수 파일
-include_once('../lib/get_data.lib.php');    
+include_once('../lib/get_data.lib.php');
 include_once('../lib/uri.lib.php');    // URL 함수 파일
 include_once('../lib/cache.lib.php');
 
 $title = G5_VERSION." 설치 완료 3/3";
-include_once ('./install.inc.php');
+include_once('./install.inc.php');
 
-//print_r($_POST); exit;
+$tmp_bo_table   = array ("notice", "qa", "free", "gallery");
+
 
 $mysql_host  = isset($_POST['mysql_host']) ? safe_install_string_check($_POST['mysql_host']) : '';
 $mysql_user  = isset($_POST['mysql_user']) ? safe_install_string_check($_POST['mysql_user']) : '';
@@ -55,7 +57,7 @@ if (!$dblink) {
 </div>
 
 <?php
-    include_once ('./install.inc2.php');
+    include_once('./install.inc2.php');
     exit;
 }
 
@@ -70,7 +72,7 @@ if (!$select_db) {
 </div>
 
 <?php
-    include_once ('./install.inc2.php');
+    include_once('./install.inc2.php');
     exit;
 }
 
@@ -91,11 +93,11 @@ unset($row);
 
     <ol>
 <?php
-$sql = " desc {$table_prefix}config";
-$result = @sql_query($sql, false, $dblink);
+$sql = "SHOW TABLES LIKE '{$table_prefix}config'";
+$is_install = sql_query($sql, false, $dblink)->num_rows > 0;
 
 // 그누보드5 재설치에 체크하였거나 그누보드5가 설치되어 있지 않다면
-if($g5_install || !$result) {
+if ($g5_install || $is_install === false) {
     // 테이블 생성 ------------------------------------
     $file = implode('', file('./gnuboard5.sql'));
     eval("\$file = \"$file\";");
@@ -104,10 +106,11 @@ if($g5_install || !$result) {
     $file = preg_replace('/`g5_([^`]+`)/', '`'.$table_prefix.'$1', $file);
     $f = explode(';', $file);
     for ($i=0; $i<count($f); $i++) {
-        if (trim($f[$i]) == '') continue;
+        if (trim($f[$i]) == '') {
+            continue;
+        }
 
         $sql = get_db_create_replace($f[$i]);
-
         sql_query($sql, true, $dblink);
     }
 }
@@ -120,10 +123,11 @@ if($g5_shop_install) {
     $file = preg_replace('/`g5_shop_([^`]+`)/', '`'.$g5_shop_prefix.'$1', $file);
     $f = explode(';', $file);
     for ($i=0; $i<count($f); $i++) {
-        if (trim($f[$i]) == '') continue;
+        if (trim($f[$i]) == '') {
+            continue;
+        }
 
         $sql = get_db_create_replace($f[$i]);
-
         sql_query($sql, true, $dblink);
     }
 }
@@ -140,7 +144,14 @@ $download_point = 0;
 
 //-------------------------------------------------------------------------------------------------
 // config 테이블 설정
-if($g5_install || !$result) {
+if ($g5_install || $is_install === false) {
+    // 기본 이미지 확장자를 설정하고
+    $image_extension = "gif|jpg|jpeg|png";
+    // 서버에서 webp 를 지원하면 확장자를 추가한다.
+    if (function_exists("imagewebp")) {
+        $image_extension .= "|webp";
+    }
+
     $sql = " insert into `{$table_prefix}config`
                 set cf_title = '".G5_VERSION."',
                     cf_theme = 'basic',
@@ -197,7 +208,7 @@ if($g5_install || !$result) {
                     cf_member_img_width = '60',
                     cf_member_img_height = '60',
                     cf_login_minutes = '10',
-                    cf_image_extension = 'gif|jpg|jpeg|png',
+                    cf_image_extension = '{$image_extension}',
                     cf_flash_extension = 'swf',
                     cf_movie_extension = 'asx|asf|wmv|wma|mpg|mpeg|mov|avi|mp3',
                     cf_formmail_is_member = '1',
@@ -241,14 +252,16 @@ if($g5_install || !$result) {
     // FAQ Master
     sql_query(" insert into `{$table_prefix}faq_master` set fm_id = '1', fm_subject = '자주하시는 질문' ", true, $dblink);
 
-    $tmp_gr_id = defined('G5_YOUNGCART_VER') ? 'shop' : 'community';
-    $tmp_gr_subject = defined('G5_YOUNGCART_VER') ? '쇼핑몰' : '커뮤니티';
+    // 그누보드, 영카트 통합으로 인하여 게시판그룹을 커뮤니티(community)로 생성 (NaviGator님,210624)
+    // $tmp_gr_id = defined('G5_YOUNGCART_VER') ? 'shop' : 'community';
+    // $tmp_gr_subject = defined('G5_YOUNGCART_VER') ? '쇼핑몰' : '커뮤니티';
+    $tmp_gr_id = 'community';
+    $tmp_gr_subject = '커뮤니티';
 
     // 게시판 그룹 생성
     sql_query(" insert into `{$table_prefix}group` set gr_id = '$tmp_gr_id', gr_subject = '$tmp_gr_subject' ", true, $dblink);
 
     // 게시판 생성
-    $tmp_bo_table   = array ("notice", "qa", "free", "gallery");
     $tmp_bo_subject = array ("공지사항", "질문답변", "자유게시판", "갤러리");
     for ($i=0; $i<count($tmp_bo_table); $i++)
     {
@@ -518,6 +531,13 @@ for ($i=0; $i<count($dir_arr); $i++) {
     @chmod($dir_arr[$i], G5_DIR_PERMISSION);
 }
 
+// 게시판 디렉토리 생성 (작은별님,211206)
+for ($i=0; $i<count($tmp_bo_table); $i++) {
+    $board_dir = $data_path.'/file/'.$tmp_bo_table[$i];
+    @mkdir($board_dir, G5_DIR_PERMISSION);
+    @chmod($board_dir, G5_DIR_PERMISSION);
+}
+
 if($g5_shop_install) {
     $dir_arr = array (
         $data_path.'/banner',
@@ -550,6 +570,7 @@ fwrite($f, "define('G5_MYSQL_PASSWORD', '".addcslashes($mysql_pass, "\\'")."');\
 fwrite($f, "define('G5_MYSQL_DB', '".addcslashes($mysql_db, "\\'")."');\n");
 fwrite($f, "define('G5_MYSQL_SET_MODE', {$mysql_set_mode});\n\n");
 fwrite($f, "define('G5_TABLE_PREFIX', '{$table_prefix}');\n\n");
+fwrite($f, "define('G5_TOKEN_ENCRYPTION_KEY', '".get_random_token_string(16)."'); // 토큰 암호화에 사용할 키\n\n");
 fwrite($f, "\$g5['write_prefix'] = G5_TABLE_PREFIX.'write_'; // 게시판 테이블명 접두사\n\n");
 fwrite($f, "\$g5['auth_table'] = G5_TABLE_PREFIX.'auth'; // 관리권한 설정 테이블\n");
 fwrite($f, "\$g5['config_table'] = G5_TABLE_PREFIX.'config'; // 기본환경 설정 테이블\n");
@@ -581,6 +602,7 @@ fwrite($f, "\$g5['faq_master_table'] = G5_TABLE_PREFIX.'faq_master'; // 자주�
 fwrite($f, "\$g5['new_win_table'] = G5_TABLE_PREFIX.'new_win'; // 새창 테이블\n");
 fwrite($f, "\$g5['menu_table'] = G5_TABLE_PREFIX.'menu'; // 메뉴관리 테이블\n");
 fwrite($f, "\$g5['social_profile_table'] = G5_TABLE_PREFIX.'member_social_profiles'; // 소셜 로그인 테이블\n");
+fwrite($f, "\$g5['member_cert_history_table'] = G5_TABLE_PREFIX.'member_cert_history'; // 본인인증 변경내역 테이블\n");
 
 if($g5_shop_install) {
     fwrite($f, "\n");
@@ -621,13 +643,14 @@ fclose($f);
         <li>DB설정 파일 생성 완료 (<?php echo $file ?>)</li>
 
 <?php
-// data 디렉토리 및 하위 디렉토리에서는 .htaccess .htpasswd .php .phtml .html .htm .inc .cgi .pl 파일을 실행할수 없게함.
+// data 디렉토리 및 하위 디렉토리에서는 .htaccess .htpasswd .php .phtml .html .htm .inc .cgi .pl .phar 파일을 실행할수 없게함.
 $f = fopen($data_path.'/.htaccess', 'w');
 $str = <<<EOD
-<FilesMatch "\.(htaccess|htpasswd|[Pp][Hh][Pp]|[Pp][Hh][Tt]|[Pp]?[Hh][Tt][Mm][Ll]?|[Ii][Nn][Cc]|[Cc][Gg][Ii]|[Pp][Ll])">
+<FilesMatch "\.(htaccess|htpasswd|[Pp][Hh][Pp]|[Pp][Hh][Tt]|[Pp]?[Hh][Tt][Mm][Ll]?|[Ii][Nn][Cc]|[Cc][Gg][Ii]|[Pp][Ll]|[Pp][Hh][Aa][Rr])">
 Order allow,deny
 Deny from all
 </FilesMatch>
+RedirectMatch 403 /session/.*
 EOD;
 fwrite($f, $str);
 fclose($f);

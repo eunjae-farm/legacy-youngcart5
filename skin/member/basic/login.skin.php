@@ -30,7 +30,7 @@ add_stylesheet('<link rel="stylesheet" href="'.$member_skin_url.'/style.css">', 
                     <label for="login_auto_login"><span></span> 자동로그인</label>  
                 </div>
                 <div class="login_if_lpl">
-                    <a href="<?php echo G5_BBS_URL ?>/password_lost.php" target="_blank" id="login_password_lost">정보찾기</a>  
+                    <a href="<?php echo G5_BBS_URL ?>/password_lost.php">아이디/비밀번호 찾기</a>  
                 </div>
             </div>
         </fieldset> 
@@ -39,7 +39,7 @@ add_stylesheet('<link rel="stylesheet" href="'.$member_skin_url.'/style.css">', 
     </div>
 
     <?php // 쇼핑몰 사용시 여기부터 ?>
-    <?php if ($default['de_level_sell'] == 1) { // 상품구입 권한 ?>
+    <?php if (isset($default['de_level_sell']) && $default['de_level_sell'] == 1) { // 상품구입 권한 ?>
 
 	<!-- 주문하기, 신청하기 -->
 	<?php if (preg_match("/orderform.php/", $url)) { ?>

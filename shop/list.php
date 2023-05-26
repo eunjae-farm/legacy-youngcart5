@@ -5,7 +5,7 @@ $ca_id = isset($_REQUEST['ca_id']) ? safe_replace_regex($_REQUEST['ca_id'], 'ca_
 $skin = isset($_REQUEST['skin']) ? safe_replace_regex($_REQUEST['skin'], 'skin') : '';
 
 // 상품 리스트에서 다른 필드로 정렬을 하려면 아래의 배열 코드에서 해당 필드를 추가하세요.
-if( isset($sort) && ! in_array($sort, array('it_sum_qty', 'it_price', 'it_use_avg', 'it_use_cnt', 'it_update_time')) ){
+if( isset($sort) && ! in_array($sort, array('it_name', 'it_sum_qty', 'it_price', 'it_use_avg', 'it_use_cnt', 'it_update_time')) ){
     $sort='';
 }
 
@@ -29,7 +29,7 @@ if(defined('_THEME_PREVIEW_') && _THEME_PREVIEW_ === true) {
 }
 
 // 본인인증, 성인인증체크
-if(!$is_admin) {
+if(!$is_admin && $config['cf_cert_use']) {
     $msg = shop_member_cert_check($ca_id, 'list');
     if($msg)
         alert($msg, G5_SHOP_URL);
