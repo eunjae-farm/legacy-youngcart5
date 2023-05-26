@@ -25,6 +25,7 @@ jobs:
           username: ${{ secrets.FTP_USERID }}
           insecure_password: ${{ secrets.FTP_PASSWORD }}
           source: ${{ secrets.FTP_PATH }}
+          insecure_ignore_fingerprint: true
           target: ..
     
     # 커밋
