@@ -27,7 +27,6 @@ jobs:
          rm -rf *
          echo '${{ secrets.FTP_PASSWORD }}' > pass_file
          sshpass -f pass_file scp -o StrictHostKeyChecking=no -r ${{ secrets.FTP_USERID }}@${{ secrets.FTP_HOST }}:${{ secrets.FTP_PATH }} ..
-        #  sshpass -p "${{ secrets.FTP_PASSWORD }}" scp -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no -r ${{ secrets.FTP_USERID }}@${{ secrets.FTP_HOST }}:${{ secrets.FTP_PATH }} ..
          cp -r ../www/* ./
          
     # 커밋
