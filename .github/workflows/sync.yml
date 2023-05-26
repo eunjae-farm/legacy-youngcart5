@@ -25,7 +25,7 @@ jobs:
          pwd
          sudo apt install -y git sshpass openssh-server
          rm -rf *
-         sshpass -p "${{ secrets.FTP_PASSWORD }}" scp -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no -r ${{ secrets.FTP_USERID }}@${{ secrets.FTP_HOST }}:${{ secrets.FTP_PATH }} ..
+         scp -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no -r ${{ secrets.FTP_USERID }}@${{ secrets.FTP_HOST }}:${{ secrets.FTP_PATH }} ..
          echo "22"
          cp -r ../www/* ./
          
