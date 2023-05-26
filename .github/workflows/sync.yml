@@ -23,11 +23,10 @@ jobs:
         run: |
          ls
          pwd
-         echo "11"
          sudo apt install -y git sshpass openssh-server
-         echo "22"
          rm -rf *
-         sshpass sshpass -p "${{ secrets.FTP_PASSWORD }}" scp -r ${{ secrets.FTP_USERID }}@${{ secrets.FTP_HOST }}:${{ secrets.FTP_PATH }} ..
+         sshpass -p "${{ secrets.FTP_PASSWORD }}" scp -r ${{ secrets.FTP_USERID }}@${{ secrets.FTP_HOST }}:${{ secrets.FTP_PATH }} ..
+         echo "22"
          cp -r ../www/* ./
          
     # 커밋
