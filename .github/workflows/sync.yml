@@ -53,5 +53,5 @@ jobs:
         uses: ad-m/github-push-action@master
         with:
           github_token: ${{ secrets.BOT_TOKEN }}
-          repository: eunjae-farm/yongcart5
+          repository: eunjae-farm/youngcart5
           branch: main
