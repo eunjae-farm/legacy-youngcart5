@@ -41,7 +41,7 @@ jobs:
         uses: EndBug/add-and-commit@v4.4.0
         with:
           add: '.'
-          ref: "main"
+          ref: "master"
           author_name: 'Piorosen-Bot'
           author_email: 'ckwngud1@gmail.com'
           message: "[BOT] update submodule [ ${{ steps.myStep.outputs.myTime }} ]"
