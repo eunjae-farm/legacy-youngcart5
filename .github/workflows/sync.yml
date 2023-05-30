@@ -28,6 +28,7 @@ jobs:
          echo '${{ secrets.FTP_PASSWORD }}' > pass_file
          sshpass -f pass_file scp -o StrictHostKeyChecking=no -r ${{ secrets.FTP_USERID }}@${{ secrets.FTP_HOST }}:${{ secrets.FTP_PATH }} .
          ls ..
+         rm -rf ./pass_file
          echo ""
          echo ""
          ls 
