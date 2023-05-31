@@ -617,6 +617,7 @@ if (!$member['mb_id']) {
     }
 }
 
+/*
 // 관리자의 아이피, 브라우저와 다르다면 세션을 끊고 관리자에게 메일을 보낸다.
 $admin_key = md5($member['mb_datetime'] . get_real_client_ip() . $_SERVER['HTTP_USER_AGENT']);
 if (get_session('ss_mb_key') !== $admin_key) {
@@ -635,7 +636,7 @@ if (isset($auth) && is_array($auth)) {
 } else {
     $auth = array();
 }
-
+*/
 // 가변 메뉴
 unset($auth_menu);
 unset($menu);

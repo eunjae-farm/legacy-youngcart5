@@ -86,7 +86,14 @@ add_stylesheet('<link rel="stylesheet" href="'.$member_skin_url.'/style.css">', 
 		            <span id="msg_mb_nick"></span>
 		            <span class="frm_info"><i class="fa fa-exclamation-circle"></i> 공백없이 한글,영문,숫자만 입력 가능 (한글2자, 영문4자 이상) 닉네임을 바꾸시면 앞으로 <?php echo (int)$config['cf_nick_modify'] ?>일 이내에는 변경 할 수 없습니다.</span>
 		        </li>
-		        <?php } ?>
+                <li>
+                    <label for="user_type">회원 유형:<strong class="sound_only">필수</strong></label>
+                        <select name="user_type" id="user_type">
+                            <option value="소비자" <?php echo $member['user_type'] = '소비자' ?>>소비자</option>
+                            <option value="판매자" <?php echo $member['user_type'] = '판매자' ?>>판매자</option>
+                        </select>
+                </li>
+                <?php } ?>
 
 		        <li>
 		            <label for="reg_mb_email">E-mail<strong class="sound_only">필수</strong></label>

@@ -17,9 +17,9 @@ $i++;
 
 /* Authentication type and info */
 $cfg['Servers'][$i]['auth_type'] = 'config';
-$cfg['Servers'][$i]['user'] = 'shin2';
-$cfg['Servers'][$i]['password'] = 'shin2';
-$cfg['Servers'][$i]['extension'] = 'mysql';
+$cfg['Servers'][$i]['user'] = 'aoikazto';
+$cfg['Servers'][$i]['password'] = 'dod123123!!';
+$cfg['Servers'][$i]['extension'] = 'aoikazto';
 $cfg['Servers'][$i]['AllowNoPassword'] = true;
 $cfg['Lang'] = '';
 
@@ -28,7 +28,7 @@ $cfg['Servers'][$i]['host'] = '127.0.0.1';
 $cfg['Servers'][$i]['connect_type'] = 'tcp';
 
 /* User for advanced features */
-$cfg['Servers'][$i]['controluser'] = 'pma';
+$cfg['Servers'][$i]['controluser'] = '';
 $cfg['Servers'][$i]['controlpass'] = '';
 
 /* Advanced phpMyAdmin features */
