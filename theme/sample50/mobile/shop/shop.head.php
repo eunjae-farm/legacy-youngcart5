@@ -316,7 +316,15 @@ tl_display_banner('상단', 'top_header');
     }
   </style>
 
-  <?php if ($is_admin) { ?><div class="hd_admin"><a href="<?php echo G5_ADMIN_URL; ?>" target="_blank">관리자</a> <a href="<?php echo G5_THEME_ADM_URL ?>" target="_blank">테마관리</a></div> <?php } ?>
+<?php if ($is_admin) { ?>
+    <?php if ($member['user_type'] == '판매자') { ?>
+        <div class="hd_admin"><a href="<?php echo G5_SELLER_URL; ?>" target="_blank">판매자</a></div>
+    <?php } elseif ($member['user_type'] == '최고관리자') { ?>
+        <div class="hd_admin"><a href="<?php echo G5_ADMIN_URL; ?>" target="_blank">관리자</a> <a
+                href="<?php echo G5_THEME_ADM_URL ?>" target="_blank">테마관리</a></div>
+    <?php } ?>
+<?php } ?>
+
   <script>
     $(document).ready(function() {
       var jbOffset = $('#hd_wr').offset();

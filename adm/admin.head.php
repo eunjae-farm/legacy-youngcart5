@@ -139,6 +139,11 @@ if (!empty($_COOKIE['g5_admin_btn_gnb'])) {
             <?php
             $jj = 1;
             foreach ($amenu as $key => $value) {
+
+                if ($key === '2') {
+                    continue;
+                }
+
                 $href1 = $href2 = '';
 
                 if (isset($menu['menu' . $key][0][2]) && $menu['menu' . $key][0][2]) {

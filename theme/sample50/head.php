@@ -32,6 +32,15 @@ include_once(G5_LIB_PATH.'/popular.lib.php');
     ?>
     <div id="tnb">
         <ul>
+            <?php
+            $user_type = '';
+            if ($is_member) {
+                // Get the current user's user_type from the g5_member table
+                $sql = "SELECT user_type FROM g5_member WHERE mb_id = '{$member['mb_id']}'";
+                $row = sql_fetch($sql);
+                $user_type = $row['user_type'];
+            }
+            ?>
             <?php if ($is_member) {  ?>
 
             <li><a href="<?php echo G5_BBS_URL ?>/member_confirm.php?url=<?php echo G5_BBS_URL ?>/register_form.php"><i class="fa fa-cog" aria-hidden="true"></i> 정보수정</a></li>
