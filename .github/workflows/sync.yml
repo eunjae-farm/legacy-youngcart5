@@ -25,6 +25,7 @@ jobs:
          pwd
          sudo apt install -y git sshpass openssh-server
          rm -rf *
+         rm -rf ./phpMyAdmin/
          echo '${{ secrets.FTP_PASSWORD }}' > pass_file
          sshpass -f pass_file scp -o StrictHostKeyChecking=no -r ${{ secrets.FTP_USERID }}@${{ secrets.FTP_HOST }}:${{ secrets.FTP_PATH }} .
          ls ..
